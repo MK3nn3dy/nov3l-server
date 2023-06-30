@@ -1,7 +1,13 @@
 require("dotenv").config();
+const winston = require("winston");
 
 // variables
 const CHAINSAFE_API_KEY = process.env.CHAINSAFE_API_KEY;
+
+// setup winston
+const logger = winston.createLogger({
+  transports: [new winston.transports.File({ filename: "logs.txt" })],
+});
 
 // function to download file
 const downloadPDFFile = async (req, res) => {
@@ -34,6 +40,9 @@ const downloadPDFFile = async (req, res) => {
       res.send(Buffer.from(buf));
     });
   } catch (error) {
+    logger.info("An error occured in the downloadPDFFile function");
+    logger.info("Winston logger worked. The error was: ");
+    logger.info(error);
     console.log("The error caught was:", error);
   }
 };
